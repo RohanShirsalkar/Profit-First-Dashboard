@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { AppContext } from "../../context/AppContext";
 import {
   Home,
   BarChart2,
@@ -11,9 +12,11 @@ import {
   LogOut,
   ChevronRight,
   Ellipsis,
+  X,
 } from "lucide-react";
 
 const Sidebar = () => {
+  const { toggleSideBar } = useContext(AppContext);
   const [active, setActive] = useState("Dashboard");
 
   const menu = [
@@ -31,14 +34,23 @@ const Sidebar = () => {
     { name: "Log Out", icon: <LogOut size={18} /> },
   ];
 
+  const handleNavigation = () => {
+    alert("Feature comming soon!");
+  };
+
   return (
-    <div className="bg-[#0D0F12]/60 backdrop-blur-sm text-white h-screen w-64 flex flex-col justify-between py-6 px-4 shadow-md rounded-r-3xl">
+    <div className="bg-[#0D0F12]/60 backdrop-blur-lg text-white h-screen w-full lg:w-64 flex flex-col justify-between py-6 px-4 shadow-md lg:rounded-r-3xl absolute left-0 top-0 z-50 lg:static">
       <div>
-        <img
-          src="/images/logo01.png"
-          alt="Profit First Logo"
-          className="h-12 mt-4 mb-6"
-        />
+        <div className="flex justify-between items-start">
+          <img
+            src="/images/logo01.png"
+            alt="Profit First Logo"
+            className="h-12 mt-4 mb-6"
+          />
+          <button onClick={toggleSideBar} className="lg:hidden">
+            <X />
+          </button>
+        </div>
         <div className="flex items-center gap-3 py-2 mb-6 border-y border-gray-400">
           <div className="w-10 h-10 rounded-full bg-gray-200" />
           <div>
@@ -57,7 +69,7 @@ const Sidebar = () => {
           {menu.map((item) => (
             <button
               key={item.name}
-              onClick={() => setActive(item.name)}
+              onClick={handleNavigation}
               className={`flex items-center justify-between gap-3 px-3 py-2 w-full rounded-lg hover:bg-[#1F242B] transition ${
                 active === item.name ? "text-p1" : ""
               }`}
@@ -78,6 +90,7 @@ const Sidebar = () => {
           <button
             key={item.name}
             className="flex items-center justify-between gap-3 px-3 py-2 w-full rounded-lg hover:bg-[#1F242B] transition"
+            onClick={handleNavigation}
           >
             <span className="flex gap-2 items-center">
               {item.icon}

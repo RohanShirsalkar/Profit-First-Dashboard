@@ -1,56 +1,43 @@
-import React from "react";
+import { ChevronDown } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { businessMetrics } from "../../data";
 
-const data = [
-  { name: "A", value: 400 },
-  { name: "B", value: 300 },
-  { name: "C", value: 300 },
-];
-
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28"];
-
-const breakdownData = [
-  {
-    label: "CASIO-VINTAGE-168",
-    value: "₹4,90,376",
-    percent: "35%",
-    color: "#62F08B",
-  },
-  {
-    label: "G-SHOCK-2100",
-    value: "₹2,80,215",
-    percent: "20%",
-    color: "#00C9FF",
-  },
-  {
-    label: "FOSSIL OLIVE",
-    value: "₹1,54,118",
-    percent: "11%",
-    color: "#ffffff",
-  },
-  {
-    label: "G-SHOCK-Z 2100",
-    value: "₹1,19,091",
-    percent: "8.5%",
-    color: "#62F08B",
-  },
-  {
-    label: "G-SHOCK OAK GA 2100",
-    value: "₹98,075",
-    percent: "7%",
-    color: "#00C9FF",
-  },
-  { label: "ORDERS", value: "₹2,59,200", percent: "18.5%", color: "#00C9FF" },
+const COLORS = [
+  "#FF5733", // bright orange-red
+  "#33FF57", // lime green
+  "#33C1FF", // sky blue
+  "#FF33F6", // hot pink
+  "#FFD133", // bright yellow
+  "#8D33FF", // vibrant purple
 ];
 
 const BreakdownSection = () => {
+  const [data, setData] = useState([]);
+  const { productRevenue } = businessMetrics;
+  useEffect(() => {
+    const productRevenueObjKeys = Object.keys(productRevenue);
+    const productRevenueArr = productRevenueObjKeys.map(
+      (e) => productRevenue[e]
+    );
+    setData(productRevenueArr.slice(0, 5));
+    // console.log(productRevenueArr);
+  }, []);
+
+  const handleButton = () => {
+    alert("Feature comming soon!");
+  };
+
   return (
     <div className="bg-[#161616] border border-gray-800 text-white p-4 rounded-md w-full h-full relative">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-sm text-gray-300">
           Overall <br /> Breakdown
         </h2>
-        <span className="text-sm text-gray-400">By Date ⌄</span>
+        <button onClick={handleButton} className="flex items-center">
+          <ChevronDown color="#2BE092" size={16} />
+          <span className="text-sm ms-1">By Date</span>
+        </button>
       </div>
 
       <div className="flex justify-center mb-6">
@@ -67,7 +54,7 @@ const BreakdownSection = () => {
               innerRadius={90}
               outerRadius={100}
               paddingAngle={0}
-              dataKey="value"
+              dataKey="total"
             >
               {data.map((entry, index) => (
                 <Cell
@@ -86,23 +73,25 @@ const BreakdownSection = () => {
       </div>
 
       <div className="space-y-4 mt-40">
-        {breakdownData.map((item, i) => (
+        {data.map((item, i) => (
           <div
             key={i}
             className="flex justify-between items-start border-b border-gray-700 pb-2"
           >
             <div className="flex items-center space-x-2">
               <span
-                className="w-2.5 h-2.5 rounded-sm"
-                style={{ backgroundColor: item.color }}
-              />
+                className="p-[6px] rounded-sm"
+                style={{ backgroundColor: COLORS[i] }}
+              ></span>
               <div>
-                <div className="text-sm font-medium">{item.label}</div>
-                <div className="text-xs text-gray-400">{item.value}</div>
+                <div className="text-sm font-medium">{item.name}</div>
+                <div className="text-xs text-gray-400">
+                  ₹{item.total.toLocaleString()}
+                </div>
               </div>
             </div>
             <div className="text-sm bg-[#2A2A2A] px-2 py-0.5 rounded text-white">
-              {item.percent}
+              {/* {item.percent} */} 10%
             </div>
           </div>
         ))}
